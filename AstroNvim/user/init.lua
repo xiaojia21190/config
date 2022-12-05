@@ -11,6 +11,7 @@ local config = {
   options = {
     opt = {
       cmdheight = 1,
+      clipboard = "unnamedplus",
     },
   },
   colorscheme = "Carbonfox",
@@ -20,12 +21,46 @@ local config = {
       ["kana/vim-textobj-user"] = { as = "textobj-user" },
       ["kana/vim-textobj-entire"] = { as = "textobj-entire" },
       ["ur4ltz/surround.nvim"] = { as = "ur4ltz" },
-      ["easymotion/vim-easymotion"] = { as = "easymotion" },
+      ["ggandor/leap.nvim"] = {
+        as = "leap",
+        config = function()
+          -- leap config
+          require("leap").add_default_mappings()
+          -- Disable auto jump first match
+          -- require('leap').opts.safe_labels = {}
+          require("leap").opts.highlight_unlabeled_phase_one_targets = true
+        end,
+      },
+      ["ggandor/flit.nvim"] = {
+        as = "flit",
+        config = function()
+          require("flit").setup {
+            keys = { f = "f", F = "F", t = "t", T = "T" },
+            -- A string like "nv", "nvo", "o", etc.
+            labeled_modes = "v",
+            multiline = true,
+            -- Like `leap`s similar argument (call-specific overrides).
+            -- E.g.: opts = { equivalence_classes = {} }
+            opts = {},
+          }
+        end,
+      },
       ["catppuccin/nvim"] = {
         as = "catppuccin",
         config = function() require("catppuccin").setup {} end,
       },
-	  ["EdenEast/nightfox.nvim"] = { as = "EdenEast"}
+      ["EdenEast/nightfox.nvim"] = { as = "EdenEast" },
+      -- debug
+      ["mfussenegger/nvim-dap"] = {
+        as = "mfussenegger",
+        config = function() require "user.configs.nvim-dap" end,
+      },
+      ["theHamsta/nvim-dap-virtual-text"] = { as = "theHamsta" },
+      ["rcarriga/nvim-dap-ui"] = { as = "rcarriga" },
+      -- node
+      ["mxsdev/nvim-dap-vscode-js"] = {
+        config = function() require "user.configs.vscode-js" end,
+      },
     },
   },
   mappings = {
@@ -39,6 +74,8 @@ local config = {
       -- ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
       -- quick save
       -- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
+      ["-"] = { "Nzzzv", desc = "N" },
+      ["="] = { "nzzzv", desc = "n" },
       ["<A-Right>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
       ["<A-Left>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer tab" },
       ["<A-m>"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" },
@@ -62,7 +99,10 @@ local config = {
       },
       ["<C-Up>"] = { "5gk", desc = "up 5" },
       ["<C-Down>"] = { "5gj", desc = "down 5" },
-      ["<C-_>"] = { function() require("Comment.api").toggle.linewise.current() end, desc = "Comment line" },
+      ["<C-_>"] = {
+        function() require("Comment.api").toggle.linewise.current() end,
+        desc = "Comment line",
+      },
     },
     v = {
       ["<C-_>"] = {
