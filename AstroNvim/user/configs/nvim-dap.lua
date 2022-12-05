@@ -117,13 +117,13 @@ map(
 	opt
 )
 -- 继续
-map("n", "<leader>dc", ":lua require'dap'.continue()<CR>", opt)
+map("n", "<F5>", ":lua require'dap'.continue()<CR>", opt)
 -- 设置断点
 map("n", "<leader>dt", ":lua require('dap').toggle_breakpoint()<CR>", opt)
 map("n", "<leader>dT", ":lua require('dap').clear_breakpoints()<CR>", opt)
 --  stepOver, stepOut, stepInto
-map("n", "<leader>dj", ":lua require'dap'.step_over()<CR>", opt)
-map("n", "<leader>dk", ":lua require'dap'.step_out()<CR>", opt)
-map("n", "<leader>dl", ":lua require'dap'.step_into()<CR>", opt)
+map("n", "<F10>", ":lua require'dap'.step_over()<CR>", opt)
+map("n", "<F11>", ":lua require'dap'.step_out()<CR>", opt)
+map("n", "<F12>", ":lua require'dap'.step_into()<CR>", opt)
 -- 弹窗
 map("n", "<leader>dh", ":lua require'dapui'.eval()<CR>", opt)
