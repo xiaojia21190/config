@@ -1,0 +1,192 @@
+nnoremap <SPACE> <Nop>
+let mapleader = " "
+
+" 显示当前模式
+set showmode
+" 共享系统粘贴板
+set clipboard=unnamed
+" 设置命令历史记录条数
+set history=2000
+" 关闭兼容vi
+set nocompatible
+" 开启语法高亮功能
+syntax enable
+" 允许用指定语法高亮配色方案替换默认方案
+syntax on
+
+" 模式搜索实时预览,增量搜索
+set incsearch
+" 设置搜索高亮
+set hlsearch
+" 忽略大小写 (该命令配合smartcase使用较好，否则不要开启)
+set ignorecase
+" 模式查找时智能忽略大小写
+set smartcase
+" vim自身命令行模式智能补全
+set wildmenu
+" 总是显示状态栏
+set laststatus=2
+" 显示光标当前位置
+set ruler
+" 高亮显示当前行/列
+set cursorline
+"set cursorcolumn
+" 禁止折行
+set nowrap
+" 将制表符扩展为空格
+set expandtab
+" 设置编辑时制表符占用空格数
+set tabstop=8
+" 设置格式化时制表符占用空格数
+set shiftwidth=4
+" 让 vim 把连续数量的空格视为一个制表符
+set softtabstop=4
+" 基于缩进或语法进行代码折叠
+set foldmethod=indent
+set foldmethod=syntax
+" 启动 vim 时关闭折叠代码
+set nofoldenable
+
+set easymotion
+set surround
+set argtextobj
+
+let keep_input_source_in_normal=1033
+let keep_input_source_in_insert=2052
+" 在normal模式下保持英文输入法（IdeaVimExtension）
+:set keep-english-in-normal
+" 在normal模式下保持英文输入法，插入模式下回复插入模式时的输入法（IdeaVimExtension）
+:set keep-english-in-normal-and-restore-in-insert
+
+"显示行号
+set number relativenumber
+
+set scrolloff=4
+
+" 定义快捷键到行首和行尾
+map H ^
+map L $
+
+" clear the highlighted search result
+nnoremap <Leader><Cr> :nohlsearch<CR>
+nnoremap <C-up> 5gk
+nnoremap <C-down> 5gj
+nnoremap = nzzzv
+nnoremap - Nzzzv
+inoremap <C-]> <Esc>
+vnoremap <C-]> <Esc>
+
+" Move half page faster
+" 向下半屏幕
+nnoremap <LEADER>d  <C-d>
+" 向上半屏幕
+nnoremap <leader>u  <C-u>
+
+" Window operation
+" 光标在多个分屏移动
+nnoremap <leader>ww <C-W>w
+" 关闭分屏
+nnoremap <leader>wd <C-W>c
+" 光标左右上下移动
+nnoremap <leader>wj <C-W>j
+nnoremap <leader>wk <C-W>k
+nnoremap <leader>wh <C-W>h
+nnoremap <leader>wl <C-W>l
+" 新建纵向窗口
+nnoremap <leader>ws <C-W>s
+nnoremap <leader>w- <C-W>s
+" 新建横向窗口
+noremap <leader>wv <C-W>v
+nnoremap <leader>w\| <C-W>v
+
+nnoremap zz zc
+
+" copy and paste
+nnoremap <Leader>y "y
+nnoremap <Leader>p "p
+nnoremap <Leader>P "+p
+nnoremap Y "+y
+
+" Tab operation
+" 打个下一个打开的文件tab
+nnoremap tn gt
+" 打个上一个打开的文件tab
+nnoremap tp gT
+
+" 窗口操作相关
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+" Quit normal mode
+" 关闭当前文件tab窗
+nnoremap <leader>q  :q<CR>
+" 关闭所有文件窗口
+nnoremap <leader>Q  :qa!<CR>
+
+" edit vimrc
+nnoremap <leader>ve :e ~/.ideavimrc<CR>
+nnoremap <leader>vw :w!<CR>
+nnoremap <leader>vs :source ~/.ideavimrc<CR>
+
+" intellij built in key map
+" 搜索idea配置项
+nnoremap <leader>a :action GotoAction<CR>
+nnoremap <leader>b :action Bookmarks<CR>
+" 项目中搜索类 java后缀文件
+nnoremap <leader>c :action GotoClass<CR>
+" 项目中搜索所有后缀 文件
+nnoremap <leader>e :action SearchEverywhere<CR>
+" 关键字搜索项目所有文件中的内容
+nnoremap <leader>f :action FindInPath<CR>
+
+" 与分支比较
+nnoremap <leader>gc :action Git.CompareWithBranch<CR>
+"
+nnoremap <leader>gr :action Git.ResolveConflicts<CR>
+nnoremap <leader>ga :action Annotate<CR>
+" 打开idea的文件窗
+nnoremap <leader>or :action FileMenu<CR>
+" 查近打开过的文件
+nnoremap <leader>r :action RecentFiles<CR>
+nnoremap <leader>s :action FileStructurePopup<CR>
+nnoremap <leader>h :action Back<CR>
+nnoremap <leader>l :action Forward<CR>
+
+" navigation
+" 打开父类
+nnoremap gs :action GotoSuperMethod<CR>
+" 光标回到上次编辑的地方
+nnoremap gb :action JumpToLastChange<CR>
+" 查找引用
+nnoremap gi :action GotoImplementation<CR>
+" 查找定义
+nnoremap gd :action GotoDeclaration<CR>
+" 重命名
+nnoremap gr :action RenameElement<CR>
+
+" code actions
+nnoremap U :action FindUsages<CR>
+" 重命名
+nnoremap R :action RenameElement<CR>
+" 格式化代码
+nnoremap <leader>f :action ReformatCode<CR>
+" nnoremap = :action ReformatCode<CR>
+
+" 注释当前行
+nnoremap gcc :action CommentByLineComment<CR>
+vnoremap gcc :action CommentByLineComment<CR>
+
+" 打断点
+nnoremap <Leader>sb :action ToggleLineBreakpoint<CR>
+nnoremap <Leader>zb :action ViewBreakpoints<CR>
+
+" 跳转到下一个错误
+nnoremap <Leader>nn :action GotoNextError<CR>
+nnoremap <Leader>nb :action GotoPreviousError<CR>
+
+
+" 行尾加;并换行
+nnoremap ;<Cr> <Esc>A;<Cr>
+" 行尾加;不换行
+nnoremap ;; <Esc>A;
