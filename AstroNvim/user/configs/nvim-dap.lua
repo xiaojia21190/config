@@ -48,7 +48,10 @@ vim.fn.sign_define(
 vim.fn.sign_define("DapStopped", { text = "", texthl = "DapStopped", linehl = "DapStopped", numhl = "DapStopped" })
 
 vt.setup({
-	commented = true,
+	commented = false,
+	enabled_commands = true, -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
+	highlight_changed_variables = false, -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
+	all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
 })
 
 -- https://github.com/rcarriga/nvim-dap-ui
@@ -98,9 +101,13 @@ dap.listeners.after.event_initialized["dapui_config"] = function()
 end
 dap.listeners.before.event_terminated["dapui_config"] = function()
 	dapui.close()
+	local repl = dap.repl
+	repl.close()
 end
 dap.listeners.before.event_exited["dapui_config"] = function()
 	dapui.close()
+	local repl = dap.repl
+	repl.close()
 end
 -- 开始
 map("n", "<leader>dd", ":RustDebuggables<CR>", opt)
