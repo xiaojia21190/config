@@ -6,6 +6,7 @@
 -- where a value with no key simply has an implicit numeric key
 local cmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
+require("go").setup()
 
 local config = {
 	options = {
@@ -18,9 +19,10 @@ local config = {
 	-- Configure plugins
 	plugins = {
 		init = {
-			["kana/vim-textobj-user"] = { as = "textobj-user" },
-			["kana/vim-textobj-entire"] = { as = "textobj-entire" },
-			["ur4ltz/surround.nvim"] = { as = "ur4ltz" },
+			{ "sheerun/vim-polyglot" },
+			{ "kana/vim-textobj-user" },
+			{ "kana/vim-textobj-entire" },
+			{ "ur4ltz/surround.nvim" },
 			["ggandor/leap.nvim"] = {
 				as = "leap",
 				config = function()
@@ -51,7 +53,6 @@ local config = {
 					require("catppuccin").setup({})
 				end,
 			},
-			["EdenEast/nightfox.nvim"] = { as = "EdenEast" },
 			-- debug
 			["mfussenegger/nvim-dap"] = {
 				config = function()
@@ -66,20 +67,53 @@ local config = {
 					require("user.configs.vscode-js")
 				end,
 			},
+			["ray-x/go.nvim"] = {
+				config = function()
+					require("go").setup({
+						go = "go", -- go command, can be go[default] or go1.18beta1
+						goimport = "gopls", -- goimport command, can be gopls[default] or goimport
+						fillstruct = "gopls", -- can be nil (use fillstruct, slower) and gopls
+						gofmt = "gofumpt", -- gofmt cmd,
+						max_line_len = 120, -- max line length in goline format
+						tag_transform = false, -- tag_transfer  check gomodifytags for details
+						test_template = "", -- default to testify if not set; g:go_nvim_tests_template  check gotests for details
+						test_template_dir = "", -- default to nil if not set; g:go_nvim_tests_template_dir  check gotests for details
+						comment_placeholder = "", -- comment_placeholder your cool placeholder e.g. ﳑ       
+						icons = { breakpoint = "🧘", currentpos = "🏃" },
+						verbose = false, -- output loginf in messages
+					})
+				end,
+			},
+			{ "ray-x/guihua.lua" },
+		},
+		["telescope"] = {
+			defaults = {
+				layout_strategy = "vertical",
+				layout_config = {
+					vertical = {
+						prompt_position = "top",
+						mirror = true,
+						preview_cutoff = 40,
+						preview_height = 0.5,
+					},
+					width = 0.95,
+					height = 0.95,
+				},
+			},
+			pickers = {
+				find_files = {
+					theme = "ivy",
+				},
+			},
 		},
 	},
 	mappings = {
 		-- first key is the mode
 		n = {
 			-- second key is the lefthand side of the map
-			-- mappings seen under group name "Buffer"
-			-- ["<leader>bb"] = { "<cmd>tabnew<cr>", desc = "New tab" },
-			-- ["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Pick to close" },
-			-- ["<leader>bj"] = { "<cmd>BufferLinePick<cr>", desc = "Pick to jump" },
-			-- ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
-			-- quick save
-			-- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
 			["-"] = { "Nzzzv", desc = "N" },
+			["H"] = { "^", desc = "^" },
+			["L"] = { "$", desc = "$" },
 			["="] = { "nzzzv", desc = "n" },
 			["<A-Right>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
 			["<A-Left>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer tab" },
@@ -95,7 +129,7 @@ local config = {
 				function()
 					require("telescope.builtin").live_grep({
 						additional_args = function(args)
-							return vim.list_extend(args, { "--hidden", "--no-ignore" })
+							return vim.list_extend(args, { "--no-ignore" })
 						end,
 					})
 				end,
@@ -109,7 +143,7 @@ local config = {
 			},
 			["<C-e>"] = {
 				function()
-					require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
+					require("telescope.builtin").find_files({ no_ignore = true })
 				end,
 				desc = "Search all files",
 			},
@@ -127,6 +161,8 @@ local config = {
 				"<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>",
 				desc = "Toggle comment line",
 			},
+			["<C-Up>"] = { "5gk", desc = "up 5" },
+			["<C-Down>"] = { "5gj", desc = "down 5" },
 		},
 		t = {
 			-- setting a mapping to false will disable it
@@ -148,6 +184,14 @@ local config = {
 			callback = function()
 				vim.cmd(":silent :!~/.config/nvim/im-select.exe 2052")
 			end,
+		})
+		augroup("format_sync_grp", { clear = true })
+		cmd("BufWritePre", {
+			pattern = "*.go",
+			callback = function()
+				require("go.format").goimport()
+			end,
+			group = "format_sync_grp",
 		})
 	end,
 }
