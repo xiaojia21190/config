@@ -152,6 +152,10 @@ local config = {
 		-- first key is the mode
 		n = {
 			-- second key is the lefthand side of the map
+			["<leader>tt"] = {
+				"<cmd>ToggleTerm size=10 direction=horizontal<cr>",
+				desc = "ToggleTerm horizontal split",
+			},
 			["-"] = { "Nzzzv", desc = "N" },
 			["<S-h>"] = { "^", desc = "^" },
 			["<S-l>"] = { "$", desc = "$" },
