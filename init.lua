@@ -147,6 +147,7 @@ local config = {
       ["<S-h>"] = { "^", desc = "^" },
       ["<S-l>"] = { "$", desc = "$" },
       ["="] = { "nzzzv", desc = "n" },
+      ["<leader>tt"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc = "ToggleTerm horizontal split" },
       ["<C-Right>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
       ["<C-Left>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer tab" },
       ["<leader>m"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" },
