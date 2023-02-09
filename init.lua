@@ -17,11 +17,11 @@ local config = {
       foldlevel = 99,
       foldenable = false,
     },
-    g = {
-      copilot_no_tab_map = true,
-      copilot_assume_mapped = true,
-      copilot_tab_fallback = "",
-    },
+    -- g = {
+    --   copilot_no_tab_map = true,
+    --   copilot_assume_mapped = true,
+    --   copilot_tab_fallback = "",
+    -- },
   },
   colorscheme = "default_theme",
   dap = {
@@ -52,7 +52,7 @@ local config = {
         },
         {
           type = "pwa-node",
-          request = "attach",
+          request = "{attach",
           name = "Attach",
           processId = function(...) return require("dap.utils").pick_process(...) end, -- protect function
           cwd = "${workspaceFolder}",
@@ -67,109 +67,26 @@ local config = {
       -- lazy-load on a command
       cmd = "StartupTime",
     },
-    -- { "github/copilot.vim", event = "InsertEnter" },
-    ["zbirenbaum/copilot.lua"] = {
-      cmd = "Copilot",
+    { "catppuccin/nvim", name = "catppuccin" },
+    {
+      "zbirenbaum/copilot.lua",
       event = "InsertEnter",
       config = function()
         require("copilot").setup {
-          panel = {
-            enabled = true,
-            auto_refresh = false,
-            keymap = {
-              jump_prev = "[[",
-              jump_next = "]]",
-              accept = "<CR>",
-              refresh = "gr",
-              open = "<M-CR>",
-            },
-            layout = {
-              position = "bottom", -- | top | left | right
-              ratio = 0.4,
-            },
-          },
-          suggestion = {
-            enabled = true,
-            auto_trigger = false,
-            debounce = 75,
-            keymap = {
-              accept = "<M-l>",
-              accept_word = false,
-              accept_line = false,
-              next = "<M-]>",
-              prev = "<M-[>",
-              dismiss = "<C-]>",
-            },
-          },
-          filetypes = {
-            yaml = false,
-            markdown = false,
-            help = false,
-            gitcommit = false,
-            gitrebase = false,
-            hgcommit = false,
-            svn = false,
-            cvs = false,
-            ["."] = false,
-          },
-          copilot_node_command = "node", -- Node.js version must be > 16.x
-          server_opts_overrides = {},
+          suggestion = { enabled = false },
+          panel = { enabled = false },
         }
       end,
     },
-    { "ur4ltz/surround.nvim" },
-    ["kevinhwang91/nvim-ufo"] = {
+    {
+      "zbirenbaum/copilot-cmp",
+      dependencies = { "copilot.lua" },
+      config = function() require("copilot_cmp").setup() end,
+    },
+    { "ur4ltz/surround.nvim", event = "InsertEnter" },
+    {
+      "ggandor/leap.nvim",
       lazy = false,
-      requires = { "kevinhwang91/promise-async" },
-      config = function()
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities.textDocument.foldingRange = {
-          dynamicRegistration = false,
-          lineFoldingOnly = true,
-        }
-        local language_servers = require("lspconfig").util.available_servers() -- or list servers manually like {'gopls', 'clangd'}
-        for _, ls in ipairs(language_servers) do
-          require("lspconfig")[ls].setup {
-            capabilities = capabilities,
-            -- you can add other fields for setting up lsp server in this table
-          }
-        end
-
-        local handler = function(virtText, lnum, endLnum, width, truncate)
-          local newVirtText = {}
-          local suffix = ("  %d "):format(endLnum - lnum)
-          local sufWidth = vim.fn.strdisplaywidth(suffix)
-          local targetWidth = width - sufWidth
-          local curWidth = 0
-          for _, chunk in ipairs(virtText) do
-            local chunkText = chunk[1]
-            local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-            if targetWidth > curWidth + chunkWidth then
-              table.insert(newVirtText, chunk)
-            else
-              chunkText = truncate(chunkText, targetWidth - curWidth)
-              local hlGroup = chunk[2]
-              table.insert(newVirtText, { chunkText, hlGroup })
-              chunkWidth = vim.fn.strdisplaywidth(chunkText)
-              -- str width returned from truncate() may less than 2nd argument, need padding
-              if curWidth + chunkWidth < targetWidth then
-                suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
-              end
-              break
-            end
-            curWidth = curWidth + chunkWidth
-          end
-          table.insert(newVirtText, { suffix, "MoreMsg" })
-          return newVirtText
-        end
-        require("ufo").setup {
-          fold_virt_text_handler = handler,
-        }
-      end,
-    },
-
-    ["ggandor/leap.nvim"] = {
-      as = "leap",
       config = function()
         -- leap config
         require("leap").add_default_mappings()
@@ -178,14 +95,10 @@ local config = {
         require("leap").opts.highlight_unlabeled_phase_one_targets = true
       end,
     },
-    ["catppuccin/nvim"] = {
-      as = "catppuccin",
-      config = function() require("catppuccin").setup {} end,
-    },
     -- debug
     {
       "mxsdev/nvim-dap-vscode-js",
-      after = "mason-nvim-dap.nvim", -- setup after mason which  installs the debugger
+      dependencies = "mason-nvim-dap.nvim", -- setup after mason which  installs the debugger
       config = function()
         require("dap-vscode-js").setup {
           debugger_cmd = { "js-debug-adapter" }, -- mason puts command in path
