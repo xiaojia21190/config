@@ -19,6 +19,8 @@ local config = {
     },
     g = {
       copilot_no_tab_map = true,
+      copilot_assume_mapped = true,
+      copilot_tab_fallback = "",
     },
   },
   colorscheme = "default_theme",
@@ -65,7 +67,7 @@ local config = {
       -- lazy-load on a command
       cmd = "StartupTime",
     },
-    { "github/copilot.vim", lazy = false },
+    { "github/copilot.vim", lazy = false, priority = 1000 },
     { "ur4ltz/surround.nvim" },
     ["kevinhwang91/nvim-ufo"] = {
       lazy = false,
