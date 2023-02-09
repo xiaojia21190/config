@@ -12,13 +12,16 @@ local config = {
     opt = {
       cmdheight = 1,
       clipboard = "unnamedplus",
-      foldmethod = "expr",
-      foldexpr = "nvim_treesitter#foldexpr()",
+      foldlevelstart = 99,
+      foldcolumn = "1",
       foldlevel = 99,
       foldenable = false,
     },
+    g = {
+      copilot_no_tab_map = true,
+    },
   },
-  colorscheme = "carbonfox",
+  colorscheme = "default_theme",
   dap = {
     configurations = {
       javascript = { -- set up javascript dap configuration
@@ -57,71 +60,109 @@ local config = {
   },
   -- Configure plugins
   plugins = {
-    init = {
-      { "kana/vim-textobj-user" },
-      { "kana/vim-textobj-entire" },
-      { "ur4ltz/surround.nvim" },
-      ["ggandor/leap.nvim"] = {
-        as = "leap",
-        config = function()
-          -- leap config
-          require("leap").add_default_mappings()
-          -- Disable auto jump first match
-          -- require('leap').opts.safe_labels = {}
-          require("leap").opts.highlight_unlabeled_phase_one_targets = true
-        end,
-      },
-      ["ggandor/flit.nvim"] = {
-        as = "flit",
-        config = function()
-          require("flit").setup {
-            keys = { f = "f", F = "F", t = "t", T = "T" },
-            -- A string like "nv", "nvo", "o", etc.
-            labeled_modes = "v",
-            multiline = true,
-            -- Like `leap`s similar argument (call-specific overrides).
-            -- E.g.: opts = { equivalence_classes = {} }
-            opts = {},
+    {
+      "dstein64/vim-startuptime",
+      -- lazy-load on a command
+      cmd = "StartupTime",
+    },
+    { "github/copilot.vim", lazy = false },
+    { "ur4ltz/surround.nvim" },
+    ["kevinhwang91/nvim-ufo"] = {
+      lazy = false,
+      requires = { "kevinhwang91/promise-async" },
+      config = function()
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        capabilities.textDocument.foldingRange = {
+          dynamicRegistration = false,
+          lineFoldingOnly = true,
+        }
+        local language_servers = require("lspconfig").util.available_servers() -- or list servers manually like {'gopls', 'clangd'}
+        for _, ls in ipairs(language_servers) do
+          require("lspconfig")[ls].setup {
+            capabilities = capabilities,
+            -- you can add other fields for setting up lsp server in this table
           }
-        end,
-      },
-      ["catppuccin/nvim"] = {
-        as = "catppuccin",
-        config = function() require("catppuccin").setup {} end,
-      },
-      -- debug
-      {
-        "mxsdev/nvim-dap-vscode-js",
-        after = "mason-nvim-dap.nvim", -- setup after mason which  installs the debugger
-        config = function()
-          require("dap-vscode-js").setup {
-            debugger_cmd = { "js-debug-adapter" }, -- mason puts command in path
-            adapters = { "pwa-node" }, -- choose adapter, only node is fully tested
-          }
-        end,
+        end
+
+        local handler = function(virtText, lnum, endLnum, width, truncate)
+          local newVirtText = {}
+          local suffix = ("  %d "):format(endLnum - lnum)
+          local sufWidth = vim.fn.strdisplaywidth(suffix)
+          local targetWidth = width - sufWidth
+          local curWidth = 0
+          for _, chunk in ipairs(virtText) do
+            local chunkText = chunk[1]
+            local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+            if targetWidth > curWidth + chunkWidth then
+              table.insert(newVirtText, chunk)
+            else
+              chunkText = truncate(chunkText, targetWidth - curWidth)
+              local hlGroup = chunk[2]
+              table.insert(newVirtText, { chunkText, hlGroup })
+              chunkWidth = vim.fn.strdisplaywidth(chunkText)
+              -- str width returned from truncate() may less than 2nd argument, need padding
+              if curWidth + chunkWidth < targetWidth then
+                suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
+              end
+              break
+            end
+            curWidth = curWidth + chunkWidth
+          end
+          table.insert(newVirtText, { suffix, "MoreMsg" })
+          return newVirtText
+        end
+        require("ufo").setup {
+          fold_virt_text_handler = handler,
+        }
+      end,
+    },
+
+    ["ggandor/leap.nvim"] = {
+      as = "leap",
+      config = function()
+        -- leap config
+        require("leap").add_default_mappings()
+        -- Disaule auto jump first match
+        -- require('leap').opts.safe_labels = {}
+        require("leap").opts.highlight_unlabeled_phase_one_targets = true
+      end,
+    },
+    ["catppuccin/nvim"] = {
+      as = "catppuccin",
+      config = function() require("catppuccin").setup {} end,
+    },
+    -- debug
+    {
+      "mxsdev/nvim-dap-vscode-js",
+      after = "mason-nvim-dap.nvim", -- setup after mason which  installs the debugger
+      config = function()
+        require("dap-vscode-js").setup {
+          debugger_cmd = { "js-debug-adapter" }, -- mason puts command in path
+          adapters = { "pwa-node" }, -- choose adapter, only node is fully tested
+        }
+      end,
+    },
+  },
+  ["mason-nvim-dap"] = {
+    ensure_installed = { "js" }, -- auto install js-debug-adapter
+  },
+  ["telescope"] = {
+    defaults = {
+      layout_strategy = "vertical",
+      layout_config = {
+        vertical = {
+          prompt_position = "top",
+          mirror = true,
+          preview_cutoff = 40,
+          preview_height = 0.5,
+        },
+        width = 0.95,
+        height = 0.95,
       },
     },
-    ["mason-nvim-dap"] = {
-      ensure_installed = { "js" }, -- auto install js-debug-adapter
-    },
-    ["telescope"] = {
-      defaults = {
-        layout_strategy = "vertical",
-        layout_config = {
-          vertical = {
-            prompt_position = "top",
-            mirror = true,
-            preview_cutoff = 40,
-            preview_height = 0.5,
-          },
-          width = 0.95,
-          height = 0.95,
-        },
-      },
-      pickers = {
-        find_files = {
-          theme = "ivy",
-        },
+    pickers = {
+      find_files = {
+        theme = "ivy",
       },
     },
   },
@@ -148,9 +189,12 @@ local config = {
       ["<S-l>"] = { "$", desc = "$" },
       ["="] = { "nzzzv", desc = "n" },
       ["<leader>tt"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc = "ToggleTerm horizontal split" },
-      ["<C-Right>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
-      ["<C-Left>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer tab" },
-      ["<leader>m"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" },
+      ["<C-Right>"] = { function() astronvim.nav_buf(vim.v.count > 0 and vim.v.count or 1) end, desc = "Next buffer" },
+      ["<C-Left>"] = {
+        function() astronvim.nav_buf(-(vim.v.count > 0 and vim.v.count or 1)) end,
+        desc = "Previous buffer",
+      },
+      ["<A-1>"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" },
       ["<leader><CR>"] = { "<cmd>nohlsearch<cr>", desc = "No Highlight" },
       ["<leader>q"] = {
         function() require("bufdelete").bufdelete(0, false) end,
@@ -172,8 +216,8 @@ local config = {
         function() require("telescope.builtin").find_files { no_ignore = true } end,
         desc = "Search all files",
       },
-      ["<C-Up>"] = { "5gk", desc = "up 5" },
-      ["<C-Down>"] = { "5gj", desc = "down 5" },
+      ["<C-Up>"] = { "8gk", desc = "up 8" },
+      ["<C-Down>"] = { "8gj", desc = "down 8" },
       ["<C-_>"] = {
         function() require("Comment.api").toggle.linewise.current() end,
         desc = "Comment line",
@@ -190,6 +234,9 @@ local config = {
     t = {
       -- setting a mapping to false will disable it
       -- ["<esc>"] = false,
+    },
+    i = {
+      ["<C-J>"] = { "copilot#Accept(<Tab>)", silent = true, expr = true, script = true },
     },
   },
   polish = function()
