@@ -67,7 +67,56 @@ local config = {
       -- lazy-load on a command
       cmd = "StartupTime",
     },
-    { "github/copilot.vim", lazy = false, priority = 1000 },
+    -- { "github/copilot.vim", event = "InsertEnter" },
+    ["zbirenbaum/copilot.lua"] = {
+      cmd = "Copilot",
+      event = "InsertEnter",
+      config = function()
+        require("copilot").setup {
+          panel = {
+            enabled = true,
+            auto_refresh = false,
+            keymap = {
+              jump_prev = "[[",
+              jump_next = "]]",
+              accept = "<CR>",
+              refresh = "gr",
+              open = "<M-CR>",
+            },
+            layout = {
+              position = "bottom", -- | top | left | right
+              ratio = 0.4,
+            },
+          },
+          suggestion = {
+            enabled = true,
+            auto_trigger = false,
+            debounce = 75,
+            keymap = {
+              accept = "<M-l>",
+              accept_word = false,
+              accept_line = false,
+              next = "<M-]>",
+              prev = "<M-[>",
+              dismiss = "<C-]>",
+            },
+          },
+          filetypes = {
+            yaml = false,
+            markdown = false,
+            help = false,
+            gitcommit = false,
+            gitrebase = false,
+            hgcommit = false,
+            svn = false,
+            cvs = false,
+            ["."] = false,
+          },
+          copilot_node_command = "node", -- Node.js version must be > 16.x
+          server_opts_overrides = {},
+        }
+      end,
+    },
     { "ur4ltz/surround.nvim" },
     ["kevinhwang91/nvim-ufo"] = {
       lazy = false,
@@ -236,9 +285,6 @@ local config = {
     t = {
       -- setting a mapping to false will disable it
       -- ["<esc>"] = false,
-    },
-    i = {
-      ["<C-J>"] = { "copilot#Accept(<Tab>)", silent = true, expr = true, script = true },
     },
   },
   polish = function()
