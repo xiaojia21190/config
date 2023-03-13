@@ -23,7 +23,6 @@ local config = {
     --   copilot_tab_fallback = "",
     -- },
   },
-  colorscheme = "default_theme",
   dap = {
     configurations = {
       javascript = { -- set up javascript dap configuration
@@ -153,9 +152,12 @@ local config = {
       ["<S-l>"] = { "$", desc = "$" },
       ["="] = { "nzzzv", desc = "n" },
       ["<leader>tt"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc = "ToggleTerm horizontal split" },
-      ["<C-Right>"] = { function() astronvim.nav_buf(vim.v.count > 0 and vim.v.count or 1) end, desc = "Next buffer" },
+      ["<C-Right>"] = {
+        function() require("astronvim.utils.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end,
+        desc = "Next buffer",
+      },
       ["<C-Left>"] = {
-        function() astronvim.nav_buf(-(vim.v.count > 0 and vim.v.count or 1)) end,
+        function() require("astronvim.utils.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end,
         desc = "Previous buffer",
       },
       ["<A-1>"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" },
