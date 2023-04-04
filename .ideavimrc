@@ -210,4 +210,4 @@ nnoremap gt :<C-u>action GotoTest<CR>
 nnoremap gp :<C-u>action FindInPath<CR>
 nnoremap gr :<C-u>action RecentFiles<CR>
 nmap <C-o> :action Back<CR>
-nnoremap gl :<C-u>action Forward<CR>
+nmap <C-i> :action Forward<CR>
