@@ -152,22 +152,11 @@ nnoremap <leader>ga :action Annotate<CR>
 " 打开idea的文件窗
 nnoremap <leader>or :action FileMenu<CR>
 " 查近打开过的文件
+
 nnoremap <leader>r :action RecentFiles<CR>
 nnoremap <leader>s :action FileStructurePopup<CR>
 nnoremap <leader>h :action Back<CR>
 nnoremap <leader>l :action Forward<CR>
-
-" navigation
-" 打开父类
-nnoremap gs :action GotoSuperMethod<CR>
-" 光标回到上次编辑的地方
-nnoremap gb :action JumpToLastChange<CR>
-" 查找引用
-nnoremap gi :action GotoImplementation<CR>
-" 查找定义
-nnoremap gd :action GotoDeclaration<CR>
-" 重命名
-nnoremap gr :action RenameElement<CR>
 
 " code actions
 nnoremap U :action FindUsages<CR>
@@ -205,9 +194,7 @@ nnoremap gs :<C-u>action GotoSuperMethod<CR>
 nnoremap gi :<C-u>action GotoImplementation<CR>
 nnoremap gf :<C-u>action GotoFile<CR>
 nnoremap gm :<C-u>action GotoSymbol<CR>
-nnoremap gu :<C-u>action ShowUsages<CR>
-nnoremap gt :<C-u>action GotoTest<CR>
-nnoremap gp :<C-u>action FindInPath<CR>
-nnoremap gr :<C-u>action RecentFiles<CR>
+nnoremap gh :<C-u>action QuickJavaDoc<CR>
+
 nmap <C-o> :action Back<CR>
-nmap <C-i> :action Forward<CR>
+nmap <C-i> :action Forward<CR>set clipboard^=ideaput
