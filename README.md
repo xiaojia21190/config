@@ -19,7 +19,10 @@ ubuntu.exe config --default-user jws
 
 
 # powershell 
+notepad $profile
+Set-PoshPrompt -Theme zash
 Set-PSReadLineOption -PredictionSource History
+
 
 
 # ssh
