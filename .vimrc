@@ -11,5 +11,5 @@ noremap = nzzzv
 noremap - Nzzzv
 
 
-noremap <C-up> 5gk
-noremap <C-down> 5gj
+noremap <C-up> 12gk
+noremap <C-down> 12gj

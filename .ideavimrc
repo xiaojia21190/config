@@ -71,12 +71,14 @@ map L $
 
 " clear the highlighted search result
 nnoremap <Leader><Cr> :nohlsearch<CR>
-nnoremap <C-up> 8gk
-nnoremap <C-down> 8gj
+nnoremap <C-up> 12gk
+nnoremap <C-down> 12gj
 nnoremap = nzzzv
 nnoremap - Nzzzv
 inoremap <C-]> <Esc>
 vnoremap <C-]> <Esc>
+vnoremap <C-up> 12gk
+vnoremap <C-down> 12gj
 
 " Move half page faster
 " 向下半屏幕
