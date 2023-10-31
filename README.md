@@ -1,3 +1,7 @@
+# powershell 
+Set-PSReadLineOption -PredictionSource History
+
+
 # ssh
 ssh-keygen -t rsa
 
