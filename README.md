@@ -1,3 +1,23 @@
+#迁移wsl2
+wsl -l -v
+```bash
+C:\Users\xxx\Desktop>wsl -l -v
+  NAME      STATE           VERSION
+* Ubuntu    Stopped         2
+```
+导出
+wsl --export Ubuntu D:\UbuntuWSL\ubuntu.tar
+卸载
+wsl --unregister Ubuntu
+查看
+wsl -l -v
+导入
+wsl --import Ubuntu D:\UbuntuWSL\ D:\UbuntuWSL\ubuntu.tar --version 2
+
+打开wsl ubuntu之后，默认以root身份登录。
+ubuntu.exe config --default-user jws
+
+
 # powershell 
 Set-PSReadLineOption -PredictionSource History
 
