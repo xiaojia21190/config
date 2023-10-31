@@ -97,6 +97,7 @@ end)
 return {
     font = wezterm.font 'JetBrains Mono',
     default_prog = { 'powershell' },
+    color_scheme = 'Darcula (base16)',
 
     switch_to_last_active_tab_when_closing_tab = false,
     enable_scroll_bar = true,

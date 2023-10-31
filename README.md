@@ -1,5 +1,5 @@
-# config
-
+# ssh
+ssh-keygen -t rsa
 
 # wsl 配置 粘贴
 ## https://github.com/neovim/neovim/wiki/FAQ#how-to-use-the-windows-clipboard-from-wsl
