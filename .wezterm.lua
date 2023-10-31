@@ -4,7 +4,7 @@ local launch_menu = {}
 local ssh_cmd = {"ssh"}
 
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-    ssh_cmd = {"powershell.exe", "ssh"}
+    ssh_cmd = {"pwsh.exe", "ssh"}
 
     table.insert(
         launch_menu,
@@ -25,8 +25,8 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
     table.insert(
         launch_menu,
         {
-            label = "PowerShell",
-            args = {"powershell.exe", "-NoLogo"}
+            label = "pwsh",
+            args = {"pwsh.exe", "-NoLogo"}
         }
     )
 
