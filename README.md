@@ -23,6 +23,16 @@ ubuntu.exe config --default-user jws
 notepad $profile
 Set-PoshPrompt -Theme zash
 Set-PSReadLineOption -PredictionSource History
+
+
+
+winget install JanDeDobbeleer.OhMyPosh -s winget
+
+oh-my-posh init pwsh  --config "$env:POSH_THEMES_PATH\zash.omp.json" | Invoke-Expression
+Set-PSReadLineOption -PredictionSource History
+
+
+
 ```
 
 
