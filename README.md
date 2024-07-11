@@ -16,6 +16,8 @@ wsl --import Ubuntu D:\UbuntuWSL\ D:\UbuntuWSL\ubuntu.tar --version 2
 
 打开wsl ubuntu之后，默认以root身份登录。
 ubuntu.exe config --default-user jws
+重置wsl的网络
+ wsl --shutdown netsh winsock reset netsh int ip reset all netsh winhttp reset proxy ipconfig /flushdns
 
 
 # powershell 
