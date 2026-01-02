@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "ctx7sk-c8e65be7-2883-4ff0-85d4-b7f37ae785e9"
+      ]
+    },
+    "ace-tool": {
+      "command": "ace-tool",
+      "args": [
+        "--base-url",
+        "https://acemcp.heroman.wtf/relay/",
+        "--token",
+        "ace_06ec6a258e444eb7cde480bbf277ae1587135dc8"
+      ]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "env": {}
+    }
+  }
+}
